@@ -6,6 +6,9 @@ import com.oocl.cultivation.ParkingLot;
 import com.oocl.cultivation.ParkingTicket;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,5 +66,31 @@ class ParkingBoyFacts {
         Car fetchedCar = utusan.fetch(null);
 
         assertThat(fetchedCar, is(nullValue()));
+    }
+
+    @Test
+    void parking_boy_should_fetch_no_car_if_given_used_ticket() {
+        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        Car car = new Car();
+        ParkingTicket ticket = utusan.park(car);
+
+        Car fetchedCar = utusan.fetch(ticket);
+        Car fetchedCarAgain = utusan.fetch(ticket);
+
+        assertThat(fetchedCar, is(notNullValue()));
+        assertThat(fetchedCarAgain, is(nullValue()));
+    }
+
+    @Test
+    void parking_boy_should_not_park_car_if_exceed_capacity() {
+        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+
+        for(int i = 0; i < 10; i++) {
+            utusan.park(new Car());
+        }
+
+        ParkingTicket ticket = utusan.park(new Car());
+
+        assertThat(ticket, is(nullValue()));
     }
 }

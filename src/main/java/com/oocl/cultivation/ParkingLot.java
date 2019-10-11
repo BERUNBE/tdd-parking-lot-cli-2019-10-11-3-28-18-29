@@ -19,11 +19,21 @@ public class ParkingLot {
         return cars.size() - capacity;
     }
 
-    public void addCarWithTicket(ParkingTicket ticket, Car car) {
-        cars.put(ticket, car);
+    public ParkingTicket addCar(Car car) {
+        if (cars.size() < capacity) {
+            ParkingTicket parkingTicket = new ParkingTicket();
+            cars.put(parkingTicket, car);
+            return parkingTicket;
+        } else {
+            return null;
+        }
     }
 
     public Map<ParkingTicket, Car> getCars() {
         return cars;
+    }
+
+    public void removeCarWithTicket(ParkingTicket ticket) {
+        cars.remove(ticket);
     }
 }
