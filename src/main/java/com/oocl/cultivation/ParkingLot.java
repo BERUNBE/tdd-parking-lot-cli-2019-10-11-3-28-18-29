@@ -16,18 +16,13 @@ public class ParkingLot {
     }
 
     public int getAvailableParkingPosition() {
-        return cars.size() - capacity;
+        return capacity - cars.size();
     }
 
     public ParkingTicket addCar(Car car) {
-        if (cars.size() < capacity) {
-            ParkingTicket parkingTicket = new ParkingTicket();
-            cars.put(parkingTicket, car);
-            return parkingTicket;
-        } else {
-            System.out.print("Not enough position.");
-            return null;
-        }
+        ParkingTicket parkingTicket = new ParkingTicket();
+        cars.put(parkingTicket, car);
+        return parkingTicket;
     }
 
     public Map<ParkingTicket, Car> getCars() {

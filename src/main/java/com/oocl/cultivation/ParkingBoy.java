@@ -1,30 +1,48 @@
 package com.oocl.cultivation;
 
+import java.util.List;
+
 public class ParkingBoy {
 
-    private final ParkingLot parkingLot;
+    private final List<ParkingLot> parkingLotList;
     private String lastErrorMessage;
 
-    public ParkingBoy(ParkingLot parkingLot) {
-        this.parkingLot = parkingLot;
+    public ParkingBoy(List<ParkingLot> parkingLotList) {
+        this.parkingLotList = parkingLotList;
     }
 
     public ParkingTicket park(Car car) {
-        return parkingLot.addCar(car);
+        for(int i = 0; i < parkingLotList.size(); i++) {
+            ParkingLot parkingLot = parkingLotList.get(i);
+            if (parkingLot.getAvailableParkingPosition() > 0){
+                return parkingLot.addCar(car);
+            }
+        }
+        lastErrorMessage = "Not enough position.";
+        return null;
     }
 
     public Car fetch(ParkingTicket ticket) {
         if (ticket == null) {
-            System.out.print("Please provide your parking ticket.");
+            lastErrorMessage = "Please provide your parking ticket.";
             return null;
         }
-        if (!parkingLot.getCars().containsKey(ticket)) {
-            System.out.print("Unrecognized parking ticket.");
+        if (!isTicketFoundInAnyParkingLot(ticket)) {
+            lastErrorMessage = "Unrecognized parking ticket.";
             return null;
         }
+        ParkingLot parkingLot = parkingLotList.stream()
+                .filter(aParkingLot -> aParkingLot.getCars().containsKey(ticket))
+                .findFirst()
+                .get();
         Car car = parkingLot.getCars().get(ticket);
         parkingLot.removeCarWithTicket(ticket);
         return car;
+    }
+
+    private boolean isTicketFoundInAnyParkingLot(ParkingTicket ticket) {
+        return parkingLotList.stream()
+                .anyMatch(aParkingLot -> aParkingLot.getCars().containsKey(ticket));
     }
 
     public String getLastErrorMessage() {

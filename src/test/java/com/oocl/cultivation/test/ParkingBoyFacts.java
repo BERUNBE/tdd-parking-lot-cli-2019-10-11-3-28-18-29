@@ -9,19 +9,19 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParkingBoyFacts {
 
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
     @Test
     void parking_boy_should_park_car_into_the_parking_lot_and_return_ticket() {
-        ParkingBoy bata = new ParkingBoy(new ParkingLot());
+        ParkingBoy bata = new ParkingBoy(asList(new ParkingLot()));
 
         ParkingTicket papel = bata.park(new Car());
 
@@ -30,7 +30,7 @@ class ParkingBoyFacts {
 
     @Test
     void parking_boy_should_fetch_car_after_receiving_ticket() {
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
         Car car1 = new Car();
         ParkingTicket paper1 = utusan.park(car1);
 
@@ -41,7 +41,7 @@ class ParkingBoyFacts {
 
     @Test
     void parking_boy_should_fetch_multiple_cars_according_to_tickets() {
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
         Car car1 = new Car();
         ParkingTicket paper1 = utusan.park(car1);
 
@@ -57,7 +57,7 @@ class ParkingBoyFacts {
 
     @Test
     void parking_boy_should_fetch_no_car_if_given_invalid_ticket() {
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
 
         Car fetchedCar = utusan.fetch(new ParkingTicket());
 
@@ -66,7 +66,7 @@ class ParkingBoyFacts {
 
     @Test
     void parking_boy_should_fetch_no_car_if_given_no_ticket() {
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
 
         Car fetchedCar = utusan.fetch(null);
 
@@ -75,7 +75,7 @@ class ParkingBoyFacts {
 
     @Test
     void parking_boy_should_fetch_no_car_if_given_used_ticket() {
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
         Car car = new Car();
         ParkingTicket ticket = utusan.park(car);
 
@@ -88,7 +88,7 @@ class ParkingBoyFacts {
 
     @Test
     void parking_boy_should_not_park_car_if_exceed_capacity() {
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
 
         for(int i = 0; i < 10; i++) {
             utusan.park(new Car());
@@ -101,34 +101,27 @@ class ParkingBoyFacts {
 
     @Test
     void should_output_error_message_when_given_invalid_ticket() {
-        System.setOut(new PrintStream(outContent));
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
 
         Car fetchedCar = utusan.fetch(new ParkingTicket());
 
-        String result = outContent.toString();
-
         assertThat(fetchedCar, is(nullValue()));
-        assertThat(result, is("Unrecognized parking ticket."));
+        assertThat(utusan.getLastErrorMessage(), is("Unrecognized parking ticket."));
     }
 
     @Test
     void should_output_error_message_when_given_no_ticket() {
-        System.setOut(new PrintStream(outContent));
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
 
         Car fetchedCar = utusan.fetch(null);
 
-        String result = outContent.toString();
-
         assertThat(fetchedCar, is(nullValue()));
-        assertThat(result, is("Please provide your parking ticket."));
+        assertThat(utusan.getLastErrorMessage(), is("Please provide your parking ticket."));
     }
 
     @Test
     void should_output_error_message_if_parking_lot_exceed_capacity() {
-        System.setOut(new PrintStream(outContent));
-        ParkingBoy utusan = new ParkingBoy(new ParkingLot());
+        ParkingBoy utusan = new ParkingBoy(asList(new ParkingLot()));
 
         for(int i = 0; i < 10; i++) {
             utusan.park(new Car());
@@ -136,10 +129,23 @@ class ParkingBoyFacts {
 
         ParkingTicket ticket = utusan.park(new Car());
 
-        String result = outContent.toString();
-
         assertThat(ticket, is(nullValue()));
-        assertThat(result, is("Not enough position."));
+        assertThat(utusan.getLastErrorMessage(), is("Not enough position."));
+    }
 
+    @Test
+    void parking_boy_should_park_car_in_second_parking_lot_if_exceed_capacity_of_first() {
+        ParkingLot parkingLot1 = new ParkingLot();
+        ParkingLot parkingLot2 = new ParkingLot();
+        ParkingBoy utusan = new ParkingBoy(asList(parkingLot1, parkingLot2));
+
+        for(int i = 0; i < 10; i++) {
+            utusan.park(new Car());
+        }
+
+        Car eleventhCar = new Car();
+        utusan.park(eleventhCar);
+
+        assertThat(parkingLot2.getCars().containsValue(eleventhCar), is(true));
     }
 }
