@@ -6,7 +6,6 @@ import java.util.List;
 public class SmartParkingBoy extends ParkingBoy{
 
     private final List<ParkingLot> parkingLotList;
-    private String lastErrorMessage;
 
     public SmartParkingBoy(List<ParkingLot> parkingLotList) {
         super(parkingLotList);
@@ -21,7 +20,7 @@ public class SmartParkingBoy extends ParkingBoy{
                 .orElse(null);
 
         if (parkingLot == null) {
-            lastErrorMessage = "Not enough position.";
+            setLastErrorMessage("Not enough position.");
             return null;
         }
 

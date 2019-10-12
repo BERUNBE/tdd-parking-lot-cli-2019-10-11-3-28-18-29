@@ -18,17 +18,17 @@ public class ParkingBoy {
                 return parkingLot.addCar(car);
             }
         }
-        lastErrorMessage = "Not enough position.";
+        setLastErrorMessage("Not enough position.");
         return null;
     }
 
     public Car fetch(ParkingTicket ticket) {
         if (ticket == null) {
-            lastErrorMessage = "Please provide your parking ticket.";
+            setLastErrorMessage("Please provide your parking ticket.");
             return null;
         }
         if (!isTicketFoundInAnyParkingLot(ticket)) {
-            lastErrorMessage = "Unrecognized parking ticket.";
+            setLastErrorMessage("Unrecognized parking ticket.");
             return null;
         }
         ParkingLot parkingLot = parkingLotList.stream()
@@ -47,5 +47,9 @@ public class ParkingBoy {
 
     public String getLastErrorMessage() {
         return lastErrorMessage;
+    }
+
+    public void setLastErrorMessage(String lastErrorMessage) {
+        this.lastErrorMessage = lastErrorMessage;
     }
 }
