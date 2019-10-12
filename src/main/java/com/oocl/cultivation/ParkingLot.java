@@ -25,6 +25,7 @@ public class ParkingLot {
             cars.put(parkingTicket, car);
             return parkingTicket;
         } else {
+            System.out.print("Not enough position.");
             return null;
         }
     }

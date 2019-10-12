@@ -14,6 +14,14 @@ public class ParkingBoy {
     }
 
     public Car fetch(ParkingTicket ticket) {
+        if (ticket == null) {
+            System.out.print("Please provide your parking ticket.");
+            return null;
+        }
+        if (!parkingLot.getCars().containsKey(ticket)) {
+            System.out.print("Unrecognized parking ticket.");
+            return null;
+        }
         Car car = parkingLot.getCars().get(ticket);
         parkingLot.removeCarWithTicket(ticket);
         return car;
