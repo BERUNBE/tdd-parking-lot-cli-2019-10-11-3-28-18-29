@@ -2,10 +2,11 @@ package com.oocl.cultivation;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
-public class SmartParkingBoy extends ParkingBoy{
+public class SuperSmartParkingBoy extends ParkingBoy{
 
-    public SmartParkingBoy(List<ParkingLot> parkingLotList) {
+    public SuperSmartParkingBoy(List<ParkingLot> parkingLotList) {
         super(parkingLotList);
     }
 
@@ -13,7 +14,7 @@ public class SmartParkingBoy extends ParkingBoy{
     public ParkingTicket park(Car car) {
         ParkingLot parkingLot = getParkingLotList().stream()
                 .filter(aParkingLot -> aParkingLot.getAvailableParkingPosition() > 0)
-                .max(Comparator.comparing(ParkingLot::getAvailableParkingPosition))
+                .max(Comparator.comparing(getParkingLotAvailablePositionRate()))
                 .orElse(null);
 
         if (parkingLot == null) {
@@ -22,5 +23,9 @@ public class SmartParkingBoy extends ParkingBoy{
         }
 
         return parkingLot.addCar(car);
+    }
+
+    private Function<ParkingLot, Integer> getParkingLotAvailablePositionRate() {
+        return aParkingLot -> aParkingLot.getAvailableParkingPosition() / aParkingLot.getCapacity();
     }
 }

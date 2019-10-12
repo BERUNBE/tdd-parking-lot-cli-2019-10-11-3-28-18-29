@@ -11,6 +11,10 @@ public class ParkingBoy {
         this.parkingLotList = parkingLotList;
     }
 
+    public List<ParkingLot> getParkingLotList() {
+        return parkingLotList;
+    }
+
     public ParkingTicket park(Car car) {
         for(int i = 0; i < parkingLotList.size(); i++) {
             ParkingLot parkingLot = parkingLotList.get(i);

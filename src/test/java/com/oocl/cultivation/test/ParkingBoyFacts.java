@@ -297,6 +297,21 @@ class ParkingBoyFacts {
         assertThat(parkingLot2.getCars().containsValue(eleventhCar), is(true));
     }
 
+    @Test
+    void super_smart_parking_boy_should_park_car_in_parking_lot_with_largest_available_position_rate() {
+        ParkingLot parkingLot = new ParkingLot();
+        ParkingLotJumbo parkingLotJumbo = new ParkingLotJumbo();
+        SuperSmartParkingBoy utusan = new SuperSmartParkingBoy(asList(parkingLot, parkingLotJumbo));
+
+        addNumberOfCarsInParkingLot(1, parkingLot);
+        addNumberOfCarsInParkingLot(10, parkingLotJumbo);
+
+        Car twelfthCar = new Car();
+        utusan.park(twelfthCar);
+
+        assertThat(parkingLot.getCars().containsValue(twelfthCar), is(true));
+    }
+
     private void addNumberOfCarsInParkingLot(int numberOfCars, ParkingLot parkingLot) {
         for (int i = 0; i < numberOfCars; i++) {
             parkingLot.addCar(new Car());
